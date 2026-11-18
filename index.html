@@ -185,9 +185,9 @@
       try {
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          redirect: 'follow',
           body: JSON.stringify({ id: ticketId })
         });
+        
         const data = await response.json();
         renderizarResultado(data);
       } catch (err) {
