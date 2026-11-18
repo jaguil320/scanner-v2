@@ -110,8 +110,8 @@
     .res-error   { background: linear-gradient(135deg, #991b1b, #b91c1c); border: 2px solid #f87171; }
     .res-loading { background: #1e293b; border: 1px solid #475569; text-align: center; }
 
-    .res-title { font-size: 20px; font-weight: 900; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .res-detail { font-size: 14px; line-height: 1.5; color: #f1f5f9; }
+    .res-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .res-detail { font-size: 14px; line-height: 1.6; color: #f1f5f9; }
     
     .winner-banner {
       margin-top: 14px;
@@ -202,13 +202,10 @@
       else if (res.status === 'warning') card.className = 'res-warning';
       else card.className = 'res-error';
 
-      let html = `<div class="res-title">${res.message || 'Resultado'}</div>`;
-      html += `<div class="res-detail">
-        <b>Ticket:</b> ${res.ticket || 'N/A'}<br>
-        <b>Asistente:</b> ${res.nombre || 'N/A'}<br>
-        <b>Localidad:</b> ${res.localidad || 'N/A'}
-      </div>`;
+      let html = `<div class="res-title">${res.message} [${res.ticket}]</div>`;
+      html += `<div class="res-detail">${res.detalle}</div>`;
 
+      // Se muestra el banner del premio ÚNICAMENTE si existe y no está vacío
       if (res.premio && res.premio.trim() !== "") {
         if (navigator.vibrate) navigator.vibrate([150, 80, 150, 80, 300]);
         html += `
