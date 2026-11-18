@@ -150,6 +150,7 @@
   <div id="resultCard"></div>
 
   <script>
+    // URL de tu Apps Script implementada
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyA_BRGOtqr0FgU0HHfRsQZSlVv1CuXo_musYF9j4tiPODbghIk9VdR6bo8nGohIYzo/exec";
 
     let bloqueado = false;
@@ -197,12 +198,16 @@
       const card = document.getElementById('resultCard');
       card.style.display = 'block';
 
-      if (res.clase === 'success') card.className = 'res-success';
-      else if (res.clase === 'warning') card.className = 'res-warning';
+      if (res.status === 'success') card.className = 'res-success';
+      else if (res.status === 'warning') card.className = 'res-warning';
       else card.className = 'res-error';
 
-      let html = `<div class="res-title">${res.titulo}</div>`;
-      html += `<div class="res-detail">${res.detalle}</div>`;
+      let html = `<div class="res-title">${res.message || 'Resultado'}</div>`;
+      html += `<div class="res-detail">
+        <b>Ticket:</b> ${res.ticket || 'N/A'}<br>
+        <b>Asistente:</b> ${res.nombre || 'N/A'}<br>
+        <b>Detalle:</b> ${res.localidad || ''}
+      </div>`;
 
       if (res.premio && res.premio.trim() !== "") {
         if (navigator.vibrate) navigator.vibrate([150, 80, 150, 80, 300]);
