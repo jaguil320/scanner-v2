@@ -157,7 +157,10 @@
     function onScanSuccess(decodedText) {
       if (bloqueado) return;
       bloqueado = true;
-      if (navigator.vibrate) navigator.vibrate(120);
+      
+      try {
+        if (navigator.vibrate) navigator.vibrate(120);
+      } catch (e) {}
 
       const ticketId = decodedText.split('|')[0].trim().toUpperCase();
       consultarTicket(ticketId);
@@ -204,9 +207,12 @@
       let html = `<div class="res-title">${res.message} [${res.ticket}]</div>`;
       html += `<div class="res-detail">${res.detalle}</div>`;
 
-      // Muestra el premio ÚNICAMENTE si posee uno asignado
+      // Se muestra el banner del premio ÚNICAMENTE si posee uno asignado
       if (res.premio && res.premio.trim() !== "") {
-        if (navigator.vibrate) navigator.vibrate([150, 80, 150, 80, 300]);
+        try {
+          if (navigator.vibrate) navigator.vibrate([150, 80, 150, 80, 300]);
+        } catch (e) {}
+
         html += `
           <div class="winner-banner">
             <div class="label">🎁 ¡BOLETO PREMIADO! ENTREGAR:</div>
