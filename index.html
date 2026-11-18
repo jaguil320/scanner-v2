@@ -206,7 +206,7 @@
       html += `<div class="res-detail">
         <b>Ticket:</b> ${res.ticket || 'N/A'}<br>
         <b>Asistente:</b> ${res.nombre || 'N/A'}<br>
-        <b>Detalle:</b> ${res.localidad || ''}
+        <b>Localidad:</b> ${res.localidad || 'N/A'}
       </div>`;
 
       if (res.premio && res.premio.trim() !== "") {
