@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Ticketrs | Control de Acceso</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎟️</text></svg>">
   <script src="https://unpkg.com/html5-qrcode"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -131,7 +132,7 @@
     .winner-banner .prize { font-size: 19px; font-weight: 900; color: #090d16; margin-top: 4px; }
   </style>
 </head>
-<body>
+<body onclick="marcarInteraccion()">
 
   <div class="header">
     <h1>🎟️ TICKETRS PUERTA</h1>
@@ -144,17 +145,23 @@
 
   <div class="manual-box">
     <input type="text" id="manualId" placeholder="ID Manual (Ej: TKT-001)">
-    <button onclick="verificarManual()">Validar</button>
+    <button onclick="marcarInteraccion(); verificarManual();">Validar</button>
   </div>
 
   <div id="resultCard"></div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_BKaNoXBAZA82YhRcFrKzB_QUmCdH7YHSh3uXkgQoH_7TvFnssqdHSVuKPDwQPWd5/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyA_BRGOtqr0FgU0HHfRsQZSlVv1CuXo_musYF9j4tiPODbghIk9VdR6bo8nGohIYzo/exec";
 
     let bloqueado = false;
+    let usuarioInteractuo = false;
+
+    function marcarInteraccion() {
+      usuarioInteractuo = true;
+    }
 
     function vibrarSeguro(patron) {
+      if (!usuarioInteractuo) return;
       try {
         if (navigator.vibrate) navigator.vibrate(patron);
       } catch (e) {}
