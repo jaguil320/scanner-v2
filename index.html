@@ -28,7 +28,7 @@
     }
     .header h1 { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; color: #f59e0b; }
     .badge { background: #1e293b; color: #38bdf8; font-size: 11px; padding: 4px 10px; border-radius: 99px; font-weight: 700; }
-    
+
     .scanner-card {
       width: 100%;
       max-width: 440px;
@@ -104,15 +104,15 @@
       animation: slideUp 0.25s ease-out;
     }
     @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    
+
     .res-success { background: linear-gradient(135deg, #065f46, #047857); border: 2px solid #34d399; }
     .res-warning { background: linear-gradient(135deg, #92400e, #b45309); border: 2px solid #fbbf24; }
     .res-error   { background: linear-gradient(135deg, #991b1b, #b91c1c); border: 2px solid #f87171; }
     .res-loading { background: #1e293b; border: 1px solid #475569; text-align: center; }
 
     .res-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-    .res-detail { font-size: 14px; line-height: 1.6; color: #f1f5f9; }
-    
+    .res-detail { font-size: 14px; line-height: 1.65; color: #f1f5f9; }
+
     .winner-banner {
       margin-top: 14px;
       background: #fef08a;
@@ -154,13 +154,16 @@
 
     let bloqueado = false;
 
+    function vibrarSeguro(patron) {
+      try {
+        if (navigator.vibrate) navigator.vibrate(patron);
+      } catch (e) {}
+    }
+
     function onScanSuccess(decodedText) {
       if (bloqueado) return;
       bloqueado = true;
-      
-      try {
-        if (navigator.vibrate) navigator.vibrate(120);
-      } catch (e) {}
+      vibrarSeguro(120);
 
       const ticketId = decodedText.split('|')[0].trim().toUpperCase();
       consultarTicket(ticketId);
@@ -185,14 +188,22 @@
       try {
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ id: ticketId })
         });
-        
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
         const data = await response.json();
         renderizarResultado(data);
       } catch (err) {
         card.className = 'res-error';
-        card.innerHTML = `<div class="res-title">❌ ERROR DE RED</div><div class="res-detail">Verifica la conexión o la URL del script.</div>`;
+        card.innerHTML = `
+          <div class="res-title">❌ ERROR DE RED</div>
+          <div class="res-detail">Verifica la conexión, permisos del script o la URL.<br><small>${err.message}</small></div>
+        `;
       }
     }
 
@@ -204,15 +215,11 @@
       else if (res.status === 'warning') card.className = 'res-warning';
       else card.className = 'res-error';
 
-      let html = `<div class="res-title">${res.message} [${res.ticket}]</div>`;
-      html += `<div class="res-detail">${res.detalle}</div>`;
+      let html = `<div class="res-title">${res.message || ''} [${res.ticket || ''}]</div>`;
+      html += `<div class="res-detail">${res.detalle || ''}</div>`;
 
-      // Se muestra el banner del premio ÚNICAMENTE si posee uno asignado
-      if (res.premio && res.premio.trim() !== "") {
-        try {
-          if (navigator.vibrate) navigator.vibrate([150, 80, 150, 80, 300]);
-        } catch (e) {}
-
+      if (res.premio && String(res.premio).trim() !== "") {
+        vibrarSeguro([150, 80, 150, 80, 300]);
         html += `
           <div class="winner-banner">
             <div class="label">🎁 ¡BOLETO PREMIADO! ENTREGAR:</div>
