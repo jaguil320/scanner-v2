@@ -130,6 +130,8 @@
     }
     .winner-banner .label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
     .winner-banner .prize { font-size: 19px; font-weight: 900; color: #090d16; margin-top: 4px; }
+    .winner-banner .provider { font-size: 13px; font-weight: 700; color: #713f12; margin-top: 6px; }
+    .winner-banner .pickup { font-size: 13px; font-weight: 800; color: #090d16; margin-top: 4px; }
   </style>
 </head>
 <body onclick="marcarInteraccion()">
@@ -151,7 +153,7 @@
   <div id="resultCard"></div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyA_BRGOtqr0FgU0HHfRsQZSlVv1CuXo_musYF9j4tiPODbghIk9VdR6bo8nGohIYzo/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj_Rj6Mjr_1k-LbDGAI6XaewQd0NZXbjm9j0aWyXNDe6JC4NvUBuFG3dC0UQoIxESJ/exec";
 
     let bloqueado = false;
     let usuarioInteractuo = false;
@@ -227,10 +229,18 @@
 
       if (res.premio && String(res.premio).trim() !== "") {
         vibrarSeguro([150, 80, 150, 80, 300]);
+        const textoProveedor = res.proveedor && String(res.proveedor).trim() !== ""
+          ? `<div class="provider">Proveedor: ${res.proveedor}</div>`
+          : "";
+        const textoRetiro = res.puntoRetiro && String(res.puntoRetiro).trim() !== ""
+          ? `<div class="pickup">📍 Retirar en: ${res.puntoRetiro}</div>`
+          : "";
         html += `
           <div class="winner-banner">
             <div class="label">🎁 ¡BOLETO PREMIADO! ENTREGAR:</div>
             <div class="prize">${res.premio}</div>
+            ${textoProveedor}
+            ${textoRetiro}
           </div>`;
       }
 
